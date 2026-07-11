@@ -1,0 +1,57 @@
+# ==========================================
+# Virtual Environments & Packages
+# ==========================================
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+wheels/
+
+# ==========================================
+# Environment & Secrets (CRITICAL)
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ==========================================
+# Python Caches & Compiled Bytecode
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ==========================================
+# uv & Dependency Locking
+# ==========================================
+# Note: Keep uv.lock tracked in git for reproducible builds!
+# Only ignore uv internal cache if stored locally:
+.uv/
+
+# ==========================================
+# IDE & System Files
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Logs & Databases
+# ==========================================
+*.log
+*.sqlite3
+*.db
+logs/
