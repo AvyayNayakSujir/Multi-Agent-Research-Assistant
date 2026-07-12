@@ -8,3 +8,16 @@ class SearchQueries(BaseModel):
         ...,
         description="2-3 distinct, targeted search queries derived from the user's question",
     )
+
+
+class CondensedContent(BaseModel):
+    """Structured output containing condensed, relevant content extracted from a scraped page."""
+
+    is_relevant: bool = Field(
+        ...,
+        description="Whether the scraped page contains any content relevant to the user's research query.",
+    )
+    relevant_content: str = Field(
+        ...,
+        description="The extracted/condensed content relevant to the query, preserving key facts, statistics, and figures. Empty if is_relevant is False.",
+    )
