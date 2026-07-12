@@ -21,3 +21,16 @@ class CondensedContent(BaseModel):
         ...,
         description="The extracted/condensed content relevant to the query, preserving key facts, statistics, and figures. Empty if is_relevant is False.",
     )
+
+
+class CritiqueOutput(BaseModel):
+    """Structured output containing critique feedback for a research draft."""
+
+    approved: bool = Field(
+        ...,
+        description="Whether the research draft meets all requirements and is ready for final delivery.",
+    )
+    feedback: str = Field(
+        ...,
+        description="Specific, actionable revision instructions when approved is False. Can be brief or empty when approved is True.",
+    )
