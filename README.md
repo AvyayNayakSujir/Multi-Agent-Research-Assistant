@@ -111,7 +111,7 @@ Using `uv` (recommended):
 ```powershell
 uv venv
 .venv\Scripts\activate
-uv pip install -r requirements.txt
+uv add -r requirements.txt
 ```
 
 Using standard `pip`:
