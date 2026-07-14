@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from app.api.v1.routes.research import router as research_router
 from app.core.logging import setup_logging
 from app.exceptions.handlers import register_exception_handlers
 from app.middleware.logging_middleware import LoggingMiddleware
@@ -22,6 +23,10 @@ register_exception_handlers(app)
 # on the request path, ensuring the request ID is available before request logging starts.
 app.add_middleware(LoggingMiddleware)
 app.add_middleware(RequestIDMiddleware)
+
+
+# Mount routers
+app.include_router(research_router, prefix="/api/v1")
 
 
 @app.get("/health")
