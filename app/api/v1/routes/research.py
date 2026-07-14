@@ -1,10 +1,12 @@
 import asyncio
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
+from app.core.config import settings
 from app.core.logging import get_logger
 from app.core.security import verify_api_key
 from app.graph.workflow import run_workflow
+from app.middleware.rate_limit import limiter
 from app.models.schemas import ResearchRequest, ResearchResponse, SourceInfo
 
 logger = get_logger(__name__)
@@ -17,14 +19,17 @@ router = APIRouter()
     response_model=ResearchResponse,
     dependencies=[Depends(verify_api_key)],
 )
-async def start_research(request: ResearchRequest) -> ResearchResponse:
+@limiter.limit(settings.RATE_LIMIT)
+async def start_research(
+    request: Request, payload: ResearchRequest
+) -> ResearchResponse:
     """Execute the multi-agent research workflow.
 
     Runs the LangGraph research-reader-writer-critique loop in a separate thread
     to prevent blocking the FastAPI event loop.
     """
-    query = request.query
-    max_iter = request.max_iterations
+    query = payload.query
+    max_iter = payload.max_iterations
 
     # Log incoming request (truncate query if very long)
     truncated_query = query[:100] + "..." if len(query) > 100 else query

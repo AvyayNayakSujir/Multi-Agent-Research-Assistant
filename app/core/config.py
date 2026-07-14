@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     GROQ_MODEL: str = "openai/gpt-oss-120b"
     TAVILY_API_KEY: str = ""
     API_KEY: str = "dev-api-key"
+    RATE_LIMIT: str = "10/minute"
     LOG_LEVEL: str | None = None
 
     @model_validator(mode="after")
