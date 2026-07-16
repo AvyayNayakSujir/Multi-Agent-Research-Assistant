@@ -94,7 +94,7 @@ RATE_LIMIT=10/minute
 
 # LLM Providers (Swapped from Anthropic to Groq)
 GROQ_API_KEY=gsk_...
-GROQ_MODEL=openai/gpt-oss-120b
+GROQ_MODEL=llama-3.3-70b-versatile
 
 # Search Integrations
 TAVILY_API_KEY=tvly_...
