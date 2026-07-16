@@ -172,34 +172,4 @@ uv run ruff check --fix
 
 ## 📡 API Documentation
 
-### GET `/health`
-- **Access**: Open/Unauthenticated
-- **Description**: Basic health check verifying the service status.
-
-### POST `/api/v1/research`
-- **Access**: Protected (requires `X-API-Key: <API_KEY>` header)
-- **Rate Limit**: Default `10/minute` (configured in settings)
-- **Request Body**:
-  ```json
-  {
-    "query": "Explain async programming in Python.",
-    "max_iterations": 3
-  }
-  ```
-- **Response Shape**:
-  ```json
-  {
-    "query": "Explain async programming in Python.",
-    "draft": "...",
-    "approved": true,
-    "iterations_used": 1,
-    "sources": [
-      {
-        "url": "https://example.com/a",
-        "title": "Title of Article"
-      }
-    ]
-  }
-  ```
-
 For a full reference of curl test commands covering success, auth failures, validation errors, and rate-limiting behaviors, refer to [docs/API_TESTING.md](https://github.com/AvyayNayakSujir/Multi-Agent-Research-Assistant/blob/main/docs/API_TESTING.md).
