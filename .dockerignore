@@ -1,0 +1,27 @@
+# Virtual envs / caches — never needed in the image, builder installs fresh
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Secrets — NEVER bake these into an image; env vars are injected at
+# container runtime instead (via docker run --env-file, or the
+# platform's dashboard)
+.env
+
+# Not needed at runtime
+tests/
+docs/
+.github/
+.git/
+README.md
+.pre-commit-config.yaml
+requirements-dev.txt
+.gitignore
+.python-version
+
+# Docker configurations
+Dockerfile
+docker-compose.yml
+.dockerignore

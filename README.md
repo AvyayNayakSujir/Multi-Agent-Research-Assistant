@@ -129,6 +129,29 @@ The server will start at [http://localhost:8000](http://localhost:8000).
 
 ---
 
+## 🐳 Running inside Docker
+
+The application is fully containerized using an optimized, multi-stage `Dockerfile` (leveraging Astral's `uv` package manager for fast build times) and a `docker-compose.yml` configuration.
+
+### 1. Run in Development Mode (Live Hot-Reloading)
+To build the image and run the container with your local code directory mounted as a volume (so your local edits instantly update the server inside the container):
+```bash
+docker compose up --build
+```
+The server starts at [http://localhost:8000](http://localhost:8000) inside the container, reading configurations dynamically from your local `.env` file.
+
+### 2. Run in Production Mode (Standalone Container)
+1. Build the production image:
+   ```bash
+   docker build -t research-assistant-backend .
+   ```
+2. Launch the container by injecting environment secrets:
+   ```bash
+   docker run -d --name research-backend -p 8000:8000 --env-file .env research-assistant-backend
+   ```
+
+---
+
 ## 🧪 Testing
 
 The repository includes a comprehensive unit and integration test suite covering tools, agents, workflow execution paths, and API endpoints.
