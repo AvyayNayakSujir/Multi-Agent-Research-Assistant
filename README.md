@@ -1,4 +1,4 @@
-# Multi-Agent AI Research Assistant Backend
+# Multi-Agent AI Research Assistant
 
 An agentic AI research pipeline that gathers search results, scrapes content, synthesizes structured reports, and conducts iterative critique/grounding cycles before finalizing drafts.
 
@@ -8,7 +8,7 @@ Built with **FastAPI**, **LangGraph**, **LangChain-Groq**, **Tavily**, and **Bea
 
 ## 🤖 Workflow Architecture
 
-The core of the backend is powered by a **LangGraph StateGraph** that orchestrates four specialized agents in a critique-revision loop:
+The core of this service is powered by a **LangGraph StateGraph** that orchestrates four specialized agents in a critique-revision loop:
 
 ```mermaid
 graph TD
@@ -143,11 +143,11 @@ The server starts at [http://localhost:8000](http://localhost:8000) inside the c
 ### 2. Run in Production Mode (Standalone Container)
 1. Build the production image:
    ```bash
-   docker build -t research-assistant-backend .
+   docker build -t research-assistant-service .
    ```
 2. Launch the container by injecting environment secrets:
    ```bash
-   docker run -d --name research-backend -p 8000:8000 --env-file .env research-assistant-backend
+   docker run -d --name research-assistant-service-1 -p 8000:8000 --env-file .env research-assistant-service
    ```
 
 ---
