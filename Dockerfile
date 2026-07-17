@@ -11,13 +11,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy the uv binary from the official image
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uv/bin/
 
-# Create a virtual environment
-RUN /uv/bin/uv venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+# Configure uv: virtual environment location and optimizations
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
 
-# Install dependencies using uv
-COPY requirements.txt .
-RUN /uv/bin/uv pip install --no-cache -r requirements.txt
+# Install dependencies using uv sync
+# By mounting the cache and binding pyproject.toml/uv.lock, we avoid copying unnecessary files and keep builds fast
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    /uv/bin/uv sync --frozen --no-dev
+
 
 # Final production stage
 FROM python:3.14-slim

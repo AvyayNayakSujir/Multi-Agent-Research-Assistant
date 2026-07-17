@@ -34,7 +34,7 @@ graph TD
 - **Robust Key-Based Rate Limiting**: Implements `slowapi` rate limiting keyed on `X-API-Key` headers (falling back to client IP), ensuring invalid keys or spam don't exhaust legitimate users' budgets.
 - **Unified Custom Error Handling**: Intercepts custom application errors (e.g. `ToolExecutionError`, `AgentTimeoutError`, `RateLimitExceeded`) and returns a standardized JSON structure including unique Request IDs.
 - **FastAPI Middleware Integration**: Implements custom request ID propagation and structured JSON request-response logging middleware.
-- **Production-Ready Package Management**: Built using modern Python packaging conventions (`pyproject.toml`, lock-compiled `requirements.txt`).
+- **Production-Ready Package Management**: Built using modern Python packaging conventions (`pyproject.toml` and locked via `uv.lock`).
 
 ---
 
@@ -77,7 +77,7 @@ graph TD
 │   └── API_TESTING.md               # Guide containing test curl requests
 ├── tests/                           # Complete pytest suite (52 tests)
 ├── pyproject.toml
-└── requirements.txt
+└── uv.lock
 ```
 
 ---
@@ -111,14 +111,7 @@ Using `uv` (recommended):
 ```powershell
 uv venv
 .venv\Scripts\activate
-uv add -r requirements.txt
-```
-
-Using standard `pip`:
-```powershell
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
+uv sync
 ```
 
 ### 2. Start the Server
