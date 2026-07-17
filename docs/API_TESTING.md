@@ -289,3 +289,38 @@ All validations fail with `422 Unprocessable Entity` before entering the workflo
        -d '{"query": "FastAPI multikey check"}' \
        -w "\nHTTP Status: %{http_code}\n"
   ```
+
+---
+
+## Research Endpoint: Streaming Status Updates (`POST /api/v1/research/stream`)
+
+This endpoint streams Server-Sent Events (SSE) in real-time as the agent nodes execute, concluding with the final research report.
+
+### 18. Stream Status Updates and Final Result
+- **Description:** Initiates a research query and streams real-time status updates, followed by the final report payload.
+- **Request:**
+  ```bash
+  curl -N -X POST http://localhost:8000/api/v1/research/stream \
+       -H "Content-Type: application/json" \
+       -H "X-API-Key: dev-api-key" \
+       -d '{"query": "Explain async programming in Python."}' \
+       -w "\nHTTP Status: %{http_code}\n"
+  ```
+  *(Note: The `-N` or `--no-buffer` flag in `curl` is crucial to prevent buffer lag and display events in real-time as they are yielded by the server).*
+- **Expected Response Stream:**
+  ```text
+  data: {"type": "status", "message": "Searching sources..."}
+
+  data: {"type": "status", "message": "Scraping & filtering content..."}
+
+  data: {"type": "status", "message": "Retrieving info..."}
+
+  data: {"type": "status", "message": "Drafting report..."}
+
+  data: {"type": "status", "message": "Revising the report..."}
+
+  data: {"type": "status", "message": "Finalizing report..."}
+
+  data: {"type": "result", "payload": {"query": "Explain async programming in Python.", "draft": "...", "approved": true, "iterations_used": 1, "sources": [...]}}
+  ```
+

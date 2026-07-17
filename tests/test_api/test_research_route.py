@@ -171,3 +171,93 @@ def test_research_route_best_effort_approved_false(mock_run_workflow):
     assert json_data["approved"] is False
     assert json_data["draft"] == "Best effort draft without approval."
     assert json_data["iterations_used"] == 3
+
+
+@patch("app.api.v1.routes.research.run_workflow_stream")
+def test_research_stream_route_success(mock_run_workflow_stream):
+    """Verify that calling /research/stream yields SSE updates and the final result successfully."""
+
+    async def mock_stream(query, max_iterations):
+        yield {"type": "status", "message": "Searching sources..."}
+        yield {"type": "status", "message": "Drafting report..."}
+        yield {
+            "type": "result",
+            "state": {
+                "query": query,
+                "draft": "Draft report from mock stream.",
+                "approved": True,
+                "iteration_count": 1,
+                "reader_output": [
+                    {"url": "https://example.com/stream", "title": "Stream Source"}
+                ],
+            },
+        }
+
+    mock_run_workflow_stream.side_effect = mock_stream
+
+    payload = {"query": "FastAPI Async", "max_iterations": 3}
+    headers = {"X-API-Key": settings.API_KEY}
+
+    response = client.post("/api/v1/research/stream", json=payload, headers=headers)
+
+    assert response.status_code == 200
+    lines = [line.strip() for line in response.text.split("\n\n") if line.strip()]
+
+    assert len(lines) == 3
+    assert lines[0].startswith("data: ")
+    assert lines[1].startswith("data: ")
+    assert lines[2].startswith("data: ")
+
+    import json
+
+    data0 = json.loads(lines[0][6:])
+    data1 = json.loads(lines[1][6:])
+    data2 = json.loads(lines[2][6:])
+
+    assert data0["type"] == "status"
+    assert data0["message"] == "Searching sources..."
+
+    assert data1["type"] == "status"
+    assert data1["message"] == "Drafting report..."
+
+    assert data2["type"] == "result"
+    payload_data = data2["payload"]
+    assert payload_data["query"] == "FastAPI Async"
+    assert payload_data["draft"] == "Draft report from mock stream."
+    assert payload_data["approved"] is True
+    assert payload_data["iterations_used"] == 1
+    assert len(payload_data["sources"]) == 1
+    assert payload_data["sources"][0]["url"] == "https://example.com/stream"
+    assert payload_data["sources"][0]["title"] == "Stream Source"
+
+    mock_run_workflow_stream.assert_called_once_with("FastAPI Async", 3)
+
+
+@patch("app.api.v1.routes.research.run_workflow_stream")
+def test_research_stream_route_error(mock_run_workflow_stream):
+    """Verify that if the stream generator crashes, an error event is yielded before closing."""
+
+    async def mock_stream(query, max_iterations):
+        yield {"type": "status", "message": "Searching sources..."}
+        raise ValueError("Something went wrong inside the stream")
+
+    mock_run_workflow_stream.side_effect = mock_stream
+
+    payload = {"query": "FastAPI Async", "max_iterations": 3}
+    headers = {"X-API-Key": settings.API_KEY}
+
+    response = client.post("/api/v1/research/stream", json=payload, headers=headers)
+    assert response.status_code == 200
+
+    lines = [line.strip() for line in response.text.split("\n\n") if line.strip()]
+    assert len(lines) == 2
+
+    import json
+
+    data0 = json.loads(lines[0][6:])
+    data1 = json.loads(lines[1][6:])
+
+    assert data0["type"] == "status"
+    assert data1["type"] == "error"
+    assert data1["error"] == "ValueError"
+    assert data1["message"] == "Something went wrong inside the stream"
