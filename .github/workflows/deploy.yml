@@ -38,3 +38,13 @@ jobs:
             avimon385/research-assistant-service:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      # Step 5: Install Railway CLI
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      # Step 6: Trigger Redeploy on Railway
+      - name: Trigger Redeploy on Railway
+        run: railway redeploy --service ${{ secrets.RAILWAY_SERVICE_NAME }} -y
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
