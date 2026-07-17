@@ -9,7 +9,7 @@ WRITER_PROMPT = ChatPromptTemplate.from_messages(
                 "and factual research draft answering the user's research query, based strictly on the provided sources.\n\n"
                 "Instructions:\n"
                 "1. Cite sources by their title/URL where relevant to substantiate key points.\n"
-                "2. Synthesize the provided content into a coherent report with logical headings.\n"
+                "2. Synthesize the provided content into a coherent report with logical headings. **The output draft must be written in clean, formatted Markdown** (utilizing headers, lists, bold text, and tables where appropriate to maximize readability).\n"
                 "3. Do not fabricate or extrapolate information that is not explicitly present in the provided sources. "
                 "Stick strictly to the facts provided."
             ),
@@ -30,7 +30,7 @@ REVISION_PROMPT = ChatPromptTemplate.from_messages(
                 "based on specific critique feedback and the provided sources.\n\n"
                 "Instructions:\n"
                 "1. Specifically address the issues highlighted in the critique feedback.\n"
-                "2. Maintain the structure and information from the previous draft that was already good.\n"
+                "2. Maintain the structure and information from the previous draft that was already good. **Ensure the revised draft continues to be formatted in clean, correct Markdown** (headers, lists, tables, etc.).\n"
                 "3. Do not fully rewrite the draft from scratch unless the feedback explicitly calls for it. "
                 "Focus on targeted adjustments, corrections, and additions.\n"
                 "4. Stick strictly to the provided sources. Do not fabricate or extrapolate."
