@@ -165,4 +165,4 @@ uv run ruff check --fix
 
 ## 📡 API Documentation
 
-For a full reference of curl test commands covering success, auth failures, validation errors, and rate-limiting behaviors, refer to [docs/API_TESTING.md](https://github.com/AvyayNayakSujir/Multi-Agent-Research-Assistant/blob/main/docs/API_TESTING.md).
+For a full reference of curl test commands covering success, auth failures, validation errors, and rate-limiting behaviors, refer to [docs/API_TESTING.md](https://github.com/AvyayNayakSujir/Multi-Agent-AI-Research-Assistant/blob/main/docs/API_TESTING.md).
